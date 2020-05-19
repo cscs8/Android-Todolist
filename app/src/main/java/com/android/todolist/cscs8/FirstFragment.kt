@@ -2,18 +2,13 @@ package com.android.todolist.cscs8
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.fragment_first.*
-import kotlinx.android.synthetic.main.fragment_first.view.*
-import kotlinx.android.synthetic.main.fragment_first.view.textInputLayout
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -35,7 +30,7 @@ class FirstFragment : Fragment() {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
 
             // EditTextへの参照を取得する
-            val editText = textInputLayout.editText
+            val editText = textInputLayout.editText?.text
             // メッセージを取り出す
             val message = editText.toString()
 
