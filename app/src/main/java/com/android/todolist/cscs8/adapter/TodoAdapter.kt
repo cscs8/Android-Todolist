@@ -31,7 +31,7 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.sampleImg.setImageResource(R.mipmap.ic_launcher_round)
+        holder.sampleImg.setImageResource(R.mipmap.ic_star_gray_round)
         holder.sampleTxt.text = dataset[position]
     }
 
