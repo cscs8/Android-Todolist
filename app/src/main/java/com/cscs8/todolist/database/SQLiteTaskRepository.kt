@@ -1,4 +1,4 @@
-package com.android.todolist.cscs8.database
+package com.cscs8.todolist.database
 
 class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository {
     private val db = helper.writableDatabase

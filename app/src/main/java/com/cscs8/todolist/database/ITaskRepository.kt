@@ -1,4 +1,4 @@
-package com.android.todolist.cscs8.database
+package com.cscs8.todolist.database
 
 interface ITaskRepository {
     fun findMaxId(): Long

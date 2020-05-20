@@ -1,8 +1,9 @@
-package com.android.todolist.cscs8
+package com.cscs8.todolist.adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
+import com.cscs8.todolist.cscs8.R
 
 class ResultActivity : AppCompatActivity() {
 

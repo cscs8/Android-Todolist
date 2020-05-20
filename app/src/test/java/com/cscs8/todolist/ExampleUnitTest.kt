@@ -1,4 +1,4 @@
-package com.android.todolist.cscs8
+package com.cscs8.todolist
 
 import org.junit.Test
 

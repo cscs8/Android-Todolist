@@ -1,4 +1,4 @@
-package com.android.todolist.cscs8.adapter
+package com.cscs8.todolist.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +8,8 @@ import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.todolist.cscs8.R
-import com.android.todolist.cscs8.database.Task
+import com.cscs8.todolist.cscs8.R
+import com.cscs8.todolist.database.Task
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
 class TodoAdapter(private val dataset: List<Task>) :

@@ -1,10 +1,11 @@
-package com.android.todolist.cscs8
+package com.cscs8.todolist
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.cscs8.todolist.cscs8.R
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.

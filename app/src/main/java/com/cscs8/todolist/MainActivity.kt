@@ -1,4 +1,4 @@
-package com.android.todolist.cscs8
+package com.cscs8.todolist
 
 import android.content.Context
 import android.os.Bundle
@@ -14,11 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.todolist.cscs8.adapter.TodoAdapter
-import com.android.todolist.cscs8.database.DatabaseHelper
-import com.android.todolist.cscs8.database.ITaskRepository
-import com.android.todolist.cscs8.database.SQLiteTaskRepository
-import com.android.todolist.cscs8.database.Task
+import com.cscs8.todolist.adapter.TodoAdapter
+import com.cscs8.todolist.cscs8.R
+import com.cscs8.todolist.database.DatabaseHelper
+import com.cscs8.todolist.database.ITaskRepository
+import com.cscs8.todolist.database.SQLiteTaskRepository
+import com.cscs8.todolist.database.Task
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
 
