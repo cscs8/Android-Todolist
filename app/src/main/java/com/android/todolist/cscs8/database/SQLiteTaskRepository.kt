@@ -18,11 +18,11 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
         TODO("Not yet implemented")
     }
 
-    override fun findAll(): List<Task>? {
+    override fun findAll(): ArrayList<Task>? {
         val sql = "SELECT _id, content FROM tasks ORDER BY _id"
         // カーソル
         val cursor = db.rawQuery(sql, null)
-        val list: List<Task> = arrayListOf()
+        val list: ArrayList<Task> = arrayListOf()
         while (cursor.moveToNext()) {
             val idxId = cursor.getColumnIndex("_id")
             val idxContent = cursor.getColumnIndex("content")
@@ -45,6 +45,9 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
     }
 
     override fun delete(id: Long) {
-        TODO("Not yet implemented")
+        val sql = "DELETE FROM tasks WHERE _id = ?"
+        val stmt = db.compileStatement(sql)
+        stmt.bindLong(1, id)
+        stmt.executeUpdateDelete()
     }
 }

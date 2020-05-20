@@ -9,9 +9,10 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.todolist.cscs8.R
+import com.android.todolist.cscs8.database.Task
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-class TodoAdapter(private val dataset: ArrayList<String>) :
+class TodoAdapter(private val dataset: List<Task>) :
     RecyclerView.Adapter<TodoAdapter.MyViewHolder>() {
     // リスナー格納変数
     private lateinit var radioListener: OnItemRadioClickListener
@@ -37,7 +38,7 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.radio.isChecked = false
         holder.imageButton.setImageResource(android.R.drawable.btn_star_big_off)
-        holder.text.text = dataset[position]
+        holder.text.text = dataset[position].content
 
         holder.radio.setOnClickListener {
             radioListener.onItemRadioClickListener(it, position, dataset[position])
@@ -56,7 +57,7 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
 
     //インターフェースの作成
     interface OnItemRadioClickListener : AdapterView.OnItemClickListener {
-        fun onItemRadioClickListener(view: View, position: Int, clickedText: String)
+        fun onItemRadioClickListener(view: View, position: Int, clickedTask: Task)
     }
 
     // リスナー

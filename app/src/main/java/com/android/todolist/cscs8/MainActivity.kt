@@ -18,6 +18,7 @@ import com.android.todolist.cscs8.adapter.TodoAdapter
 import com.android.todolist.cscs8.database.DatabaseHelper
 import com.android.todolist.cscs8.database.ITaskRepository
 import com.android.todolist.cscs8.database.SQLiteTaskRepository
+import com.android.todolist.cscs8.database.Task
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
 
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     // リストのアイテム
-    private lateinit var list: ArrayList<String>
+    private lateinit var list: ArrayList<Task>
 
     // キーボード表示を制御するためのオブジェクト
     private lateinit var inputMethodManager: InputMethodManager
@@ -122,7 +123,9 @@ class MainActivity : AppCompatActivity() {
     private fun recycleViewInit() {
 
         /// 表示するテキスト配列を作る [テキスト0, テキスト1, ....]
-        list = arrayListOf("Todoを追加してください...")
+
+        list = repository.findAll() ?: arrayListOf(Task(-1, "Todoを追加してください..."))
+
         viewAdapter = TodoAdapter(list)
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
@@ -177,9 +180,13 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setOnItemRadioClickListener(adapter: TodoAdapter) {
         adapter.setOnItemRadioClickListener(object : TodoAdapter.OnItemRadioClickListener {
-            override fun onItemRadioClickListener(view: View, position: Int, clickedText: String) {
-                deleteTodo(position)
-                Toast.makeText(applicationContext, "${clickedText}を削除しました", Toast.LENGTH_LONG)
+            override fun onItemRadioClickListener(view: View, position: Int, clickedTask: Task) {
+                deleteTodo(position, clickedTask.id)
+                Toast.makeText(
+                    applicationContext,
+                    "${clickedTask.content}を削除しました",
+                    Toast.LENGTH_LONG
+                )
                     .show()
                 // 背景へフォーカスを移す
                 mainLayout.requestFocus()
@@ -228,20 +235,19 @@ class MainActivity : AppCompatActivity() {
         val content = editText.toString()
         // DBに保存する
         val id = repository.save(content)
-        list.add(0, content)
+        list.add(0, Task(id, content))
         viewAdapter.notifyItemInserted(0)
     }
 
     /**
      * Todoを削除する.
      */
-    private fun deleteTodo(position: Int) {
+    private fun deleteTodo(position: Int, id: Long) {
         list.removeAt(position)
-        if (list.size == 0) list.add("Todoを追加してください...")
+        if (list.size == 0) list.add(Task(-1, "Todoを追加してください..."))
         viewAdapter.notifyDataSetChanged()
         // DBから削除する
-        // TODO: Taskにしたい
-        repository.delete(position.toLong())
+        repository.delete(id)
     }
 
 
