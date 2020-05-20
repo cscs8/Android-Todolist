@@ -3,7 +3,10 @@ package com.android.todolist.cscs8
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +55,26 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.button3).setOnClickListener {
             insertTodo()
         }
+
+        // インターフェースの実装
+        val adapter: TodoAdapter = viewAdapter as TodoAdapter
+        adapter.setOnItemClickListener(object : TodoAdapter.OnItemClickListener {
+            override fun onItemClickListener(view: View, position: Int, clickedText: String) {
+                deleteTodo(position)
+                Toast.makeText(applicationContext, "${clickedText}を削除しました", Toast.LENGTH_LONG)
+                    .show()
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                TODO("Not yet implemented")
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,5 +103,20 @@ class MainActivity : AppCompatActivity() {
         val message = editText.toString()
         list.add(0, message)
         viewAdapter.notifyItemInserted(0)
+    }
+
+    /**
+     * Todoを削除する.
+     */
+    private fun deleteTodo(position: Int) {
+        list.removeAt(position)
+        viewAdapter.notifyItemRemoved(position)
+    }
+
+    /**
+     * Todoにスターをつける.
+     */
+    private fun addStar(position: Int) {
+        // TODO:
     }
 }
