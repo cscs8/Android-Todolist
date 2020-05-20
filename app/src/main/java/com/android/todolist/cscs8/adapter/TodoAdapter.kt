@@ -16,11 +16,12 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
     // リスナー格納変数
     private lateinit var radioListener: OnItemRadioClickListener
     private lateinit var imageListener: OnItemImageClickListener
+    private lateinit var textListener: OnItemTextClickListener
 
     class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val radio: RadioButton = view.radioButton
         val imageButton: ImageButton = view.imageButton
-        val sampleTxt: TextView = view.sampleTxt
+        val text: TextView = view.sampleTxt
     }
 
 
@@ -36,7 +37,7 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.radio.isChecked = false
         holder.imageButton.setImageResource(android.R.drawable.btn_star_big_off)
-        holder.sampleTxt.text = dataset[position]
+        holder.text.text = dataset[position]
 
         holder.radio.setOnClickListener {
             radioListener.onItemRadioClickListener(it, position, dataset[position])
@@ -44,6 +45,10 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
 
         holder.imageButton.setOnClickListener {
             imageListener.onItemImageClickListener(holder)
+        }
+
+        holder.text.setOnClickListener {
+            textListener.onItemTextClickListener()
         }
     }
 
@@ -69,4 +74,13 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
         this.imageListener = listener
     }
 
+    //インターフェースの作成
+    interface OnItemTextClickListener : AdapterView.OnItemClickListener {
+        fun onItemTextClickListener()
+    }
+
+    // リスナー
+    fun setOnItemTextClickListener(listener: OnItemTextClickListener) {
+        this.textListener = listener
+    }
 }
