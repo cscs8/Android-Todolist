@@ -49,25 +49,8 @@ class MainActivity : AppCompatActivity() {
         // キーボード表示制御
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-
-        // Addボタン
-        findViewById<Button>(R.id.buttonAdd).setOnClickListener {
-            insertTodo()
-        }
-
-
-        // editTextからフォーカス変更された時のリスナー
-        textInputLayout.editText?.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                // editTextにフォーカスがあれば特に処理なし
-                return@setOnFocusChangeListener
-            }
-            //キーボード非表示
-            inputMethodManager.hideSoftInputFromWindow(
-                v.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
-        }
+        // リスナーの設定
+        setOnCreateListener()
 
     }
 
@@ -95,12 +78,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * onCreate時のリスナーを設定する
+     */
+    private fun setOnCreateListener() {
+
+        // Addボタン
+        findViewById<Button>(R.id.buttonAdd).setOnClickListener {
+            insertTodo()
+        }
+
+
+        // editTextからフォーカス変更された時のリスナー
+        textInputLayout.editText?.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                // editTextにフォーカスがあれば特に処理なし
+                return@setOnFocusChangeListener
+            }
+            //キーボード非表示
+            inputMethodManager.hideSoftInputFromWindow(
+                v.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+
+    /**
      * recycleViewを初期化する.
      */
     private fun recycleViewInit() {
 
         /// 表示するテキスト配列を作る [テキスト0, テキスト1, ....]
-        list = arrayListOf("テキスト1", "テキスト2", "テキスト3")
+        list = arrayListOf("Todoを追加してください...")
         viewAdapter = TodoAdapter(list)
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.recyclerView).apply {
