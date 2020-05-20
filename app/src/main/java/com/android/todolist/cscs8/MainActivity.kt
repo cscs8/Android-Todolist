@@ -58,11 +58,25 @@ class MainActivity : AppCompatActivity() {
 
         // インターフェースの実装
         val adapter: TodoAdapter = viewAdapter as TodoAdapter
-        adapter.setOnItemClickListener(object : TodoAdapter.OnItemClickListener {
-            override fun onItemClickListener(view: View, position: Int, clickedText: String) {
+        adapter.setOnItemRadioClickListener(object : TodoAdapter.OnItemRadioClickListener {
+            override fun onItemRadioClickListener(view: View, position: Int, clickedText: String) {
                 deleteTodo(position)
                 Toast.makeText(applicationContext, "${clickedText}を削除しました", Toast.LENGTH_LONG)
                     .show()
+            }
+
+            override fun onItemClick(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                TODO("Not yet implemented")
+            }
+        })
+        adapter.setOnItemImageClickListener(object : TodoAdapter.OnItemImageClickListener {
+            override fun onItemImageClickListener(holder: TodoAdapter.MyViewHolder) {
+                changeStar(holder)
             }
 
             override fun onItemClick(
@@ -105,18 +119,26 @@ class MainActivity : AppCompatActivity() {
         viewAdapter.notifyItemInserted(0)
     }
 
+
     /**
      * Todoを削除する.
      */
     private fun deleteTodo(position: Int) {
         list.removeAt(position)
-        viewAdapter.notifyItemRemoved(position)
+        if (list.size == 0) list.add("Todoを追加してください...")
+        viewAdapter.notifyDataSetChanged()
     }
 
+
     /**
-     * Todoにスターをつける.
+     * スター状態を変更する.
      */
-    private fun addStar(position: Int) {
-        // TODO:
+    private fun changeStar(holder: TodoAdapter.MyViewHolder) {
+        holder.imageButton.isActivated = !holder.imageButton.isActivated
+        if (holder.imageButton.isActivated) {
+            holder.imageButton.setImageResource(android.R.drawable.btn_star_big_on)
+            return
+        }
+        holder.imageButton.setImageResource(android.R.drawable.btn_star_big_off)
     }
 }

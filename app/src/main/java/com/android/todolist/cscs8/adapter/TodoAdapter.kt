@@ -4,25 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ImageView
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.todolist.cscs8.R
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-//class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-//    val textView: TextView = view.findViewById(R.id.textView)
-//}
-
 class TodoAdapter(private val dataset: ArrayList<String>) :
     RecyclerView.Adapter<TodoAdapter.MyViewHolder>() {
     // リスナー格納変数
-    private lateinit var listener: OnItemClickListener
+    private lateinit var radioListener: OnItemRadioClickListener
+    private lateinit var imageListener: OnItemImageClickListener
 
     class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val radio: RadioButton = view.radioButton
-        val sampleImg: ImageView = view.sampleImg
+        val imageButton: ImageButton = view.imageButton
         val sampleTxt: TextView = view.sampleTxt
     }
 
@@ -38,29 +35,38 @@ class TodoAdapter(private val dataset: ArrayList<String>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.radio.isChecked = false
-        holder.sampleImg.setImageResource(R.mipmap.ic_star_gray_round)
+        holder.imageButton.setImageResource(android.R.drawable.btn_star_big_off)
         holder.sampleTxt.text = dataset[position]
 
-
-
         holder.radio.setOnClickListener {
-            listener.onItemClickListener(it, position, dataset[position])
+            radioListener.onItemRadioClickListener(it, position, dataset[position])
         }
 
-        holder.sampleImg.setOnClickListener {
-            listener.onItemClickListener(it, position, dataset[position])
+        holder.imageButton.setOnClickListener {
+            imageListener.onItemImageClickListener(holder)
         }
     }
 
     override fun getItemCount() = dataset.size
 
     //インターフェースの作成
-    interface OnItemClickListener : AdapterView.OnItemClickListener {
-        fun onItemClickListener(view: View, position: Int, clickedText: String)
+    interface OnItemRadioClickListener : AdapterView.OnItemClickListener {
+        fun onItemRadioClickListener(view: View, position: Int, clickedText: String)
     }
 
     // リスナー
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
+    fun setOnItemRadioClickListener(listener: OnItemRadioClickListener) {
+        this.radioListener = listener
     }
+
+    //インターフェースの作成
+    interface OnItemImageClickListener : AdapterView.OnItemClickListener {
+        fun onItemImageClickListener(holder: MyViewHolder)
+    }
+
+    // リスナー
+    fun setOnItemImageClickListener(listener: OnItemImageClickListener) {
+        this.imageListener = listener
+    }
+
 }
