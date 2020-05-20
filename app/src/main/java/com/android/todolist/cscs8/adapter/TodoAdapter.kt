@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.recyclerview_item.view.*
 //    val textView: TextView = view.findViewById(R.id.textView)
 //}
 
-class TodoAdapter(private val dataset: Array<String>) :
+class TodoAdapter(private val dataset: ArrayList<String>) :
     RecyclerView.Adapter<TodoAdapter.MyViewHolder>() {
     class MyViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val sampleImg = view.sampleImg
