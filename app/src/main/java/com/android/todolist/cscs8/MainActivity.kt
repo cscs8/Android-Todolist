@@ -15,10 +15,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.todolist.cscs8.adapter.TodoAdapter
+import com.android.todolist.cscs8.database.DatabaseHelper
+import com.android.todolist.cscs8.database.ITaskRepository
+import com.android.todolist.cscs8.database.SQLiteTaskRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_first.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var helper: DatabaseHelper
+    private lateinit var repository: ITaskRepository
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -37,6 +43,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        helper = DatabaseHelper(this@MainActivity)
+        repository = SQLiteTaskRepository(helper)
 
         // recycleViewの初期化
         recycleViewInit()
@@ -75,6 +84,11 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy() {
+        helper.close()
+        super.onDestroy()
     }
 
     /**
@@ -210,12 +224,13 @@ class MainActivity : AppCompatActivity() {
     private fun insertTodo() {
         // EditTextへの参照を取得する
         val editText = textInputLayout.editText?.text
-        // メッセージを取り出す
-        val message = editText.toString()
-        list.add(0, message)
+        // 内容を取り出す
+        val content = editText.toString()
+        // DBに保存する
+        val id = repository.save(content)
+        list.add(0, content)
         viewAdapter.notifyItemInserted(0)
     }
-
 
     /**
      * Todoを削除する.
@@ -224,6 +239,9 @@ class MainActivity : AppCompatActivity() {
         list.removeAt(position)
         if (list.size == 0) list.add("Todoを追加してください...")
         viewAdapter.notifyDataSetChanged()
+        // DBから削除する
+        // TODO: Taskにしたい
+        repository.delete(position.toLong())
     }
 
 
