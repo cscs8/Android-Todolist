@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity() {
         // DBに保存する
         val id = repository.save(content)
         list.add(0, Task(id, content))
-        viewAdapter.notifyItemInserted(0)
+        viewAdapter.notifyDataSetChanged()
     }
 
     /**
