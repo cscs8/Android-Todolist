@@ -236,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         val content = editText.toString()
         // DBに保存する
         val id = repository.save(content)
-        list.add(0, Task(id, content))
+        id?.let { list.add(0, Task(it, content)) }
         viewAdapter.notifyDataSetChanged()
     }
 
