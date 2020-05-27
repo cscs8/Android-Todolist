@@ -1,5 +1,6 @@
 package com.cscs8.todolist.database
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -17,11 +18,42 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (oldVersion == 1) {
-            db.execSQL(SQL_UPGRADE_TASKS_OLD_1)
+        if (oldVersion != 1) return
+
+        val projection = arrayOf(
+            BaseColumns._ID,
+            TaskReaderContract.Tasks.COLUMN_NAME_CONTENT
+        )
+        val cursor = db.query(
+            TaskReaderContract.Tasks.TABLE_NAME,
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        val list: ArrayList<Task> = arrayListOf()
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                val content =
+                    getString(getColumnIndexOrThrow(TaskReaderContract.Tasks.COLUMN_NAME_CONTENT))
+                list.add(Task(id, content))
+            }
         }
-//        db.execSQL(SQL_DELETE_ENTRIES)
-//        onCreate(db)
+
+        db.execSQL(SQL_DELETE_TASKS)
+        onCreate(db)
+
+
+        for (task in list) {
+            val values = ContentValues().apply {
+                put(BaseColumns._ID, task.id)
+                put(TaskReaderContract.Tasks.COLUMN_NAME_CONTENT, task.content)
+            }
+            db.insert(TaskReaderContract.Tasks.TABLE_NAME, null, values)
+        }
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -42,12 +74,6 @@ class DatabaseHelper(context: Context) :
                     "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                     "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT," +
                     "${TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE} INTEGER DEFAULT 0)"
-
-//        // CREATE TABLEのSQL
-//        private const val SQL_CREATE_TASKS =
-//            "CREATE TABLE ${TaskReaderContract.Tasks.TABLE_NAME} (" +
-//                    "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-//                    "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT)"
 
         // DROP TABLEのSQL
         private const val SQL_DELETE_TASKS =
