@@ -51,6 +51,10 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
 
     }
 
+    override fun update(task: Task): Long? {
+        TODO("Not yet implemented")
+    }
+
     override fun delete(id: Long) {
         val sql = "DELETE FROM tasks WHERE _id = ?"
         val stmt = db.compileStatement(sql)
