@@ -13,14 +13,15 @@ class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(SQL_CREATE_ENTRIES)
+        db.execSQL(SQL_CREATE_TASKS)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES)
-        onCreate(db)
+        if (oldVersion == 1) {
+            db.execSQL(SQL_UPGRADE_TASKS_OLD_1)
+        }
+//        db.execSQL(SQL_DELETE_ENTRIES)
+//        onCreate(db)
     }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -36,14 +37,25 @@ class DatabaseHelper(context: Context) :
         private const val DATABASE_VERSION = 2
 
         // CREATE TABLEのSQL
-        private const val SQL_CREATE_ENTRIES =
+        private const val SQL_CREATE_TASKS =
             "CREATE TABLE ${TaskReaderContract.Tasks.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                     "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT," +
                     "${TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE} INTEGER DEFAULT 0)"
 
+//        // CREATE TABLEのSQL
+//        private const val SQL_CREATE_TASKS =
+//            "CREATE TABLE ${TaskReaderContract.Tasks.TABLE_NAME} (" +
+//                    "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+//                    "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT)"
+
         // DROP TABLEのSQL
-        private const val SQL_DELETE_ENTRIES =
+        private const val SQL_DELETE_TASKS =
             "DROP TABLE IF EXISTS ${TaskReaderContract.Tasks.TABLE_NAME}"
+
+        // old version 1からのupgrade用SQL
+        private const val SQL_UPGRADE_TASKS_OLD_1 =
+            "ALTER TABLE ${TaskReaderContract.Tasks.TABLE_NAME} ADD COLUMN" +
+                    "${TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE} INTEGER DEFAULT 0"
     }
 }

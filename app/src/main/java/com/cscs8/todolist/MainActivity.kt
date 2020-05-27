@@ -165,7 +165,9 @@ class MainActivity : AppCompatActivity() {
                 clickedTask: Task
             ) {
                 changeStar(holder)
-                updateTodo(position, clickedTask)
+                val favorite = !clickedTask.favorite
+                val newTask = clickedTask.copy(favorite = favorite)
+                updateTodo(position, newTask)
                 // 背景へフォーカスを移す
                 mainLayout.requestFocus()
             }

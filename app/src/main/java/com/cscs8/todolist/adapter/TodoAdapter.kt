@@ -37,7 +37,9 @@ class TodoAdapter(private val dataset: List<Task>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.radio.isChecked = false
-        holder.imageButton.setImageResource(android.R.drawable.btn_star_big_off)
+        val buttonImage =
+            if (dataset[position].favorite) android.R.drawable.btn_star_big_on else android.R.drawable.btn_star_big_off
+        holder.imageButton.setImageResource(buttonImage)
         holder.text.text = dataset[position].content
 
         holder.radio.setOnClickListener {
