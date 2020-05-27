@@ -159,8 +159,15 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setOnItemImageClickListener(adapter: TodoAdapter) {
         adapter.setOnItemImageClickListener(object : TodoAdapter.OnItemImageClickListener {
-            override fun onItemImageClickListener(holder: TodoAdapter.MyViewHolder) {
+            override fun onItemImageClickListener(
+                holder: TodoAdapter.MyViewHolder,
+                position: Int,
+                clickedTask: Task
+            ) {
                 changeStar(holder)
+                val favorite = !clickedTask.favorite
+                val newTask = clickedTask.copy(favorite = favorite)
+                updateTodo(position, newTask)
                 // 背景へフォーカスを移す
                 mainLayout.requestFocus()
             }
@@ -236,7 +243,19 @@ class MainActivity : AppCompatActivity() {
         val content = editText.toString()
         // DBに保存する
         val id = repository.save(content)
-        list.add(0, Task(id, content))
+        id?.let { list.add(0, Task(it, content)) }
+        viewAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * Todoを変更する.
+     */
+    private fun updateTodo(position: Int, task: Task) {
+        // DBに保存する
+        repository.update(task)
+        list.find { it.id == task.id }
+        list.removeAt(position)
+        list.add(position, task)
         viewAdapter.notifyDataSetChanged()
     }
 
