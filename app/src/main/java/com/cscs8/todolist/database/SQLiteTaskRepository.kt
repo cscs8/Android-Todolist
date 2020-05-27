@@ -55,10 +55,11 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
         TODO("Not yet implemented")
     }
 
-    override fun delete(id: Long) {
-        val sql = "DELETE FROM tasks WHERE _id = ?"
-        val stmt = db.compileStatement(sql)
-        stmt.bindLong(1, id)
-        stmt.executeUpdateDelete()
+    override fun delete(id: Long): Int {
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf(id.toString())
+        val deleteRows = db.delete(TaskReaderContract.Tasks.TABLE_NAME, selection, selectionArgs)
+        if (deleteRows <= 0) Log.d("", "タスクの削除に失敗しました.")
+        return deleteRows
     }
 }

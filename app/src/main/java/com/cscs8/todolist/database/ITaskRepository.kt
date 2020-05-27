@@ -5,5 +5,5 @@ interface ITaskRepository {
     fun findAll(): ArrayList<Task>?
     fun save(content: String): Long?
     fun update(task: Task): Long?
-    fun delete(id: Long)
+    fun delete(id: Long): Int
 }
