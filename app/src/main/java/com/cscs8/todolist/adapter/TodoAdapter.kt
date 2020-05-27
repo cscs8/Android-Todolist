@@ -45,7 +45,7 @@ class TodoAdapter(private val dataset: List<Task>) :
         }
 
         holder.imageButton.setOnClickListener {
-            imageListener.onItemImageClickListener(holder)
+            imageListener.onItemImageClickListener(holder, position, dataset[position])
         }
 
         holder.text.setOnClickListener {
@@ -67,7 +67,7 @@ class TodoAdapter(private val dataset: List<Task>) :
 
     //インターフェースの作成
     interface OnItemImageClickListener : AdapterView.OnItemClickListener {
-        fun onItemImageClickListener(holder: MyViewHolder)
+        fun onItemImageClickListener(holder: MyViewHolder, position: Int, clickedTask: Task)
     }
 
     // リスナー

@@ -7,12 +7,24 @@ import android.util.Log
 class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository {
     private val db = helper.writableDatabase
 
+    // Boolean拡張プロパティ
+    private val Boolean?.int
+        get() = if (this != null && this) 1 else 0
+
+    // Int拡張プロパティ
+    private val Int?.boolean
+        get() = (this != null && this > 0)
+
     override fun find(id: Long): Task? {
         TODO("Not yet implemented")
     }
 
     override fun findAll(): ArrayList<Task>? {
-        val projection = arrayOf(BaseColumns._ID, TaskReaderContract.Tasks.COLUMN_NAME_CONTENT)
+        val projection = arrayOf(
+            BaseColumns._ID,
+            TaskReaderContract.Tasks.COLUMN_NAME_CONTENT,
+            TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE
+        )
         // カーソル
         val cursor = db.query(
             TaskReaderContract.Tasks.TABLE_NAME,
@@ -27,8 +39,11 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
         with(cursor) {
             while (moveToNext()) {
                 val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
-                val content = getString(getColumnIndexOrThrow("content"))
-                list.add(Task(id, content))
+                val content =
+                    getString(getColumnIndexOrThrow(TaskReaderContract.Tasks.COLUMN_NAME_CONTENT))
+                val favorite =
+                    getInt(getColumnIndexOrThrow(TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE))
+                list.add(Task(id, content, favorite.boolean))
             }
         }
         if (list.isEmpty()) return null
@@ -51,8 +66,21 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
 
     }
 
-    override fun update(task: Task): Long? {
-        TODO("Not yet implemented")
+    override fun update(task: Task): Int {
+        // Create a new map of values, where column names are the keys
+        val values = ContentValues().apply {
+            put(TaskReaderContract.Tasks.COLUMN_NAME_CONTENT, task.content)
+            put(TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE, task.favorite.int)
+        }
+
+        val selection = "${BaseColumns._ID} = ?"
+        val selectionArgs = arrayOf(task.id.toString())
+
+        // Insert the new row, returning the primary key value of the new row
+        val count =
+            db.update(TaskReaderContract.Tasks.TABLE_NAME, values, selection, selectionArgs)
+        if (count <= 0) Log.d("", "タスクの変更に失敗しました.")
+        return count
     }
 
     override fun delete(id: Long): Int {

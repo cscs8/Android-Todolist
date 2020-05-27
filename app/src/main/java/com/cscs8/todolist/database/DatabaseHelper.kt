@@ -39,7 +39,8 @@ class DatabaseHelper(context: Context) :
         private const val SQL_CREATE_ENTRIES =
             "CREATE TABLE ${TaskReaderContract.Tasks.TABLE_NAME} (" +
                     "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-                    "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT)"
+                    "${TaskReaderContract.Tasks.COLUMN_NAME_CONTENT} TEXT," +
+                    "${TaskReaderContract.Tasks.COLUMN_NAME_FAVORITE} INTEGER DEFAULT 0)"
 
         // DROP TABLEのSQL
         private const val SQL_DELETE_ENTRIES =
