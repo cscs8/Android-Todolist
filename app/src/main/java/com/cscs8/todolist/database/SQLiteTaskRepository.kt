@@ -33,7 +33,7 @@ class SQLiteTaskRepository(private val helper: DatabaseHelper) : ITaskRepository
             null,
             null,
             null,
-            null
+           "${BaseColumns._ID} DESC"
         )
         val list: ArrayList<Task> = arrayListOf()
         with(cursor) {

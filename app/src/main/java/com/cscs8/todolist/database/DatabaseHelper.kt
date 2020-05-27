@@ -31,7 +31,7 @@ class DatabaseHelper(context: Context) :
             null,
             null,
             null,
-            null
+            "${BaseColumns._ID} DESC"
         )
         val list: ArrayList<Task> = arrayListOf()
         with(cursor) {
